@@ -8,8 +8,12 @@
   --ink-soft: #615d56;
   --ink-faint: #9a958c;
   --slate: #3e5575;
-  --skin: #e7c4a0;
-  --hair: #3a342c;
+  --skin: #ecc7a6;
+  --skin-sh: #d9ae88;
+  --hair: #6e4e34;
+  --hair-2: #5a3d28;
+  --stubble: #b98f6e;
+  --shirt: #43689f;
   --teal: #2f9e94;
   --gold: #d49a28;
   --coral: #e0523b;
@@ -36,6 +40,9 @@ body {
   -webkit-font-smoothing: antialiased;
   background-image: radial-gradient(120% 90% at 50% -10%, #faf9f4 0%, var(--canvas) 55%);
   overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {

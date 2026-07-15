@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout
   title="Chris Parcel"
-  description="Chris Parcel — software developer in Los Angeles. Work, projects, writing, and how to get in touch."
+  description="Chris Parcel — software developer in Los Angeles. Experience, side projects, writing, and how to get in touch."
 >
   <Fragment slot="head">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,43 +17,11 @@ import Layout from '../layouts/Layout.astro';
 
   <div class="top">
     <span class="nm">Chris Parcel</span>
-    <span class="meta">Software developer · Los Angeles · open to work</span>
+    <span class="meta">Software developer · Los Angeles · Open to work</span>
   </div>
 
   <div class="stage">
-    <!-- SCENE -->
-    <div class="scene">
-      <svg class="wires" id="wires"></svg>
-
-      <div class="cast">
-        <div class="bubble" id="bubble"></div>
-        <div class="chris" id="chris">
-          <div class="shadow"></div>
-          <div class="head">
-            <div class="hair"></div>
-            <div class="glasses">
-              <div class="lens"><span class="eye"></span></div>
-              <div class="bridge"></div>
-              <div class="lens"><span class="eye"></span></div>
-            </div>
-            <div class="mouth"></div>
-          </div>
-          <div class="body">
-            <div class="collar"></div>
-            <div class="arm l"></div>
-            <div class="arm r"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="swarm" id="swarm"></div>
-
-      <div class="repos" id="repos">
-        <div class="kick">Repositories</div>
-      </div>
-    </div>
-
-    <!-- CONTENT (decoupled from the robots) -->
+    <!-- CONTENT -->
     <div class="content">
       <div class="side">
         <div class="cmds" id="cmds"></div>
@@ -63,90 +31,280 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </div>
+
+  <!-- FOOTER: Chris answering a queue of agents -->
+  <footer class="footer">
+    <div class="qscene">
+      <div class="cast">
+        <div class="bubble" id="bubble"></div>
+        <div class="chris" id="chris">
+          <div class="shadow"></div>
+          <div class="head">
+            <div class="brow l"></div>
+            <div class="brow r"></div>
+            <div class="eye l"></div>
+            <div class="eye r"></div>
+            <div class="nose"></div>
+            <div class="stubble"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="hair"></div>
+          <div class="body">
+            <div class="collar"></div>
+            <div class="arm l"></div>
+            <div class="arm r"></div>
+          </div>
+        </div>
+      </div>
+      <div class="queue" id="queue"></div>
+    </div>
+  </footer>
 </Layout>
 
 <style is:global>
+  .stage {
+    max-width: 1180px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 40px 20px;
+    flex: 1 0 auto;
+  }
+
   .top {
     max-width: 1180px;
+    width: 100%;
     margin: 0 auto;
-    padding: 26px 40px 0;
+    padding: 24px 40px;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
   }
   .top .nm {
-    font-weight: 800;
-    font-size: 17px;
+    font-weight: 700;
+    font-size: 26px;
     letter-spacing: -0.02em;
   }
   .top .meta {
     font-family: var(--sans);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.005em;
     color: var(--ink-soft);
   }
 
-  .stage {
+  .scenebar,
+  .scenetoggle {
+    display: none;
+  }
+
+  /* ── FOOTER: Chris answering a queue of agents ── */
+  .footer {
+    flex: none;
     max-width: 1180px;
-    margin: 0 auto;
-    padding: 10px 40px 64px;
-  }
-
-  /* ── SCENE: me · bots · repos ── */
-  .scene {
-    position: relative;
-    display: grid;
-    grid-template-columns: 186px minmax(200px, 1fr) 296px;
-    gap: 18px;
-    align-items: center;
-    min-height: 64vh;
-    padding-top: 26px;
-  }
-
-  .wires {
-    position: absolute;
-    inset: 0;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: visible;
+    margin: 0 auto;
+    padding: 8px 40px 24px;
   }
-  .wire {
-    fill: none;
-    stroke-linecap: round;
+  .qscene {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    min-height: 190px;
+    padding-top: 30px;
+  }
+  .queue {
+    position: relative;
+    flex: 1;
+    height: 150px;
+    align-self: flex-end;
+  }
+  .agent {
+    position: absolute;
+    bottom: 0;
+    width: 56px;
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s, transform 0.5s;
+  }
+  .agent.enter {
     opacity: 0;
-    transition: opacity 0.45s;
+    transform: translateX(26px);
   }
-  .wire.on {
-    opacity: 0.45;
-    animation: march 1s linear infinite;
+  .agent.leave {
+    opacity: 0;
+    transform: translateY(-16px);
   }
-  .wire.read.on {
-    animation-direction: reverse;
+  .agent .arig {
+    position: relative;
   }
-  @keyframes march {
-    to {
-      stroke-dashoffset: -24;
+  .agent .ant {
+    position: absolute;
+    left: 50%;
+    top: -13px;
+    width: 2px;
+    height: 13px;
+    background: var(--ink-faint);
+    transform: translateX(-50%);
+  }
+  .agent .ant::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    background: var(--ah);
+    opacity: 0.5;
+    transition: opacity 0.3s, box-shadow 0.3s;
+  }
+  .agent.active .ant::after {
+    opacity: 1;
+    box-shadow: 0 0 8px 1px var(--ah);
+  }
+  .agent .abody {
+    position: relative;
+    width: 52px;
+    height: 44px;
+    margin: 0 auto;
+    border-radius: 14px;
+    background: var(--ah);
+    box-shadow: inset -5px -5px 0 rgba(0, 0, 0, 0.09), 0 10px 20px -12px rgba(35, 33, 29, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    filter: saturate(0.85) opacity(0.9);
+    transition: filter 0.35s;
+  }
+  .agent.active .abody {
+    filter: saturate(1) opacity(1);
+  }
+  .agent.asking {
+    transform: translateY(-7px);
+  }
+  .agent .aeye {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #20201d;
+  }
+  .agent .glow {
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 38px;
+    height: 9px;
+    transform: translateX(-50%);
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      color-mix(in oklch, var(--ah) 45%, transparent),
+      transparent 70%
+    );
+    filter: blur(1px);
+    opacity: 0.4;
+  }
+  /* the front agent's question, pointing down toward Chris */
+  .agent .qbub {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    width: 162px;
+    transform: translate(-50%, -16px) scale(0.96);
+    transform-origin: 50% 100%;
+    background: #fff;
+    border: 1.5px solid var(--ah);
+    border-radius: 13px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    line-height: 1.38;
+    color: var(--ink);
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(35, 33, 29, 0.04), 0 16px 30px -20px rgba(35, 33, 29, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 6;
+  }
+  .agent .qbub::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: var(--ah);
+  }
+  .agent .qbub::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-top: -1.6px;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top-color: #fff;
+    z-index: 1;
+  }
+  .agent.asking .qbub {
+    opacity: 1;
+    transform: translate(-50%, -24px) scale(1);
+  }
+
+  /* thinking dots while queued; hidden once it's asking */
+  .agent .think {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -8px);
+    display: flex;
+    gap: 3.5px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 5px 8px;
+    box-shadow: 0 8px 18px -13px rgba(35, 33, 29, 0.6);
+    transition: opacity 0.3s;
+    z-index: 5;
+  }
+  .agent .think i {
+    width: 3.5px;
+    height: 3.5px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    animation: tdot 1.5s ease-in-out infinite;
+  }
+  .agent .think i:nth-child(2) {
+    animation-delay: 0.22s;
+  }
+  .agent .think i:nth-child(3) {
+    animation-delay: 0.44s;
+  }
+  @keyframes tdot {
+    0%,
+    65%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
     }
   }
-  .wpulse {
+  .agent.asking .think,
+  .agent.leave .think {
     opacity: 0;
-    transition: opacity 0.4s;
   }
-  .wpulse.on {
-    opacity: 1;
-  }
-  .wlabel {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.06em;
-    opacity: 0;
-    transition: opacity 0.35s;
-  }
-  .wlabel.on {
-    opacity: 0.85;
+
+  @media (max-width: 900px) {
+    .footer {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .qscene {
+      gap: 12px;
+    }
   }
 
   /* Chris */
@@ -154,14 +312,14 @@ import Layout from '../layouts/Layout.astro';
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 2;
   }
   .bubble {
     position: relative;
     max-width: 196px;
-    margin-bottom: 14px;
+    margin: 0 0 30px 20px;
     background: #fff;
     border: 1px solid var(--rule);
     border-radius: 16px;
@@ -182,7 +340,7 @@ import Layout from '../layouts/Layout.astro';
   .bubble::after {
     content: '';
     position: absolute;
-    left: 50%;
+    left: 55px;
     bottom: -9px;
     width: 16px;
     height: 16px;
@@ -228,83 +386,130 @@ import Layout from '../layouts/Layout.astro';
   .head {
     position: relative;
     width: 88px;
-    height: 88px;
-    border-radius: 50%;
+    height: 90px;
+    border-radius: 46% 46% 48% 48% / 44% 44% 52% 52%;
     background: var(--skin);
     margin: 0 auto -10px;
-    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.04);
+    box-shadow: inset -6px -7px 0 rgba(0, 0, 0, 0.05);
     z-index: 2;
   }
   .hair {
     position: absolute;
     left: 50%;
-    top: -10px;
-    width: 98px;
-    height: 52px;
-    transform: translateX(-50%);
-    background: var(--hair);
-    border-radius: 50px 50px 16px 16px;
-    z-index: 1;
+    top: -13px;
+    width: 104px;
+    height: 48px;
+    transform: translateX(-51%);
+    background: linear-gradient(150deg, var(--hair) 58%, var(--hair-2));
+    z-index: 3;
+    border-radius: 54% 56% 42% 44% / 80% 78% 32% 32%;
+  }
+  .hair::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 20px;
+    width: 26px;
+    height: 22px;
+    background: linear-gradient(150deg, var(--hair), var(--hair-2));
+    border-radius: 60% 40% 50% 50% / 70% 60% 40% 40%;
+    transform: rotate(-12deg);
   }
   .hair::after {
     content: '';
     position: absolute;
-    left: 8px;
-    bottom: -6px;
-    width: 16px;
-    height: 20px;
-    background: var(--hair);
-    border-radius: 0 0 8px 8px;
+    right: 5px;
+    top: 24px;
+    width: 22px;
+    height: 26px;
+    background: linear-gradient(150deg, var(--hair), var(--hair-2));
+    border-radius: 50% 60% 45% 55% / 55% 65% 40% 45%;
+    transform: rotate(10deg);
+  }
+  .brow {
+    position: absolute;
+    top: 36px;
+    width: 15px;
+    height: 4px;
+    border-radius: 3px;
+    background: var(--hair-2);
+    z-index: 4;
+  }
+  .brow.l {
+    left: 22px;
+    transform: rotate(-4deg);
+  }
+  .brow.r {
+    right: 22px;
+    transform: rotate(4deg);
+  }
+  .eye {
+    position: absolute;
+    top: 44px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3a2c22;
+    z-index: 4;
+    transition: transform 0.08s;
+  }
+  .eye.l {
+    left: 26px;
+  }
+  .eye.r {
+    right: 26px;
+  }
+  .chris.blink .eye {
+    transform: scaleY(0.12);
+  }
+  .nose {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 12px;
+    border-radius: 0 0 4px 4px;
+    background: var(--skin-sh);
+    opacity: 0.55;
+    z-index: 4;
+  }
+  .stubble {
+    position: absolute;
+    left: 50%;
+    top: 52px;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 34px;
+    z-index: 3;
+    border-radius: 0 0 46% 46% / 0 0 80% 80%;
+    background: radial-gradient(120% 90% at 50% 100%, var(--stubble) 0 55%, transparent 72%);
+    opacity: 0.5;
+    -webkit-mask: radial-gradient(120% 90% at 50% 100%, #000 0 62%, transparent 74%);
   }
   .glasses {
     position: absolute;
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 3;
+    display: none;
   }
   .lens {
-    width: 24px;
-    height: 24px;
-    border: 2.5px solid #2b2924;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.28);
+    display: none;
   }
   .bridge {
-    width: 7px;
-    height: 2.5px;
-    background: #2b2924;
-  }
-  .eye {
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #2b2924;
-    transform: translateX(-50%);
-    transition: transform 0.08s;
-  }
-  .lens .eye {
-    transform: translateX(-50%);
-  }
-  .chris.blink .eye {
-    transform: translateX(-50%) scaleY(0.12);
+    display: none;
   }
   .mouth {
     position: absolute;
-    top: 70px;
+    top: 72px;
     left: 50%;
     transform: translateX(-50%);
-    width: 20px;
+    width: 18px;
     height: 3px;
     border-radius: 3px;
-    background: #8a5a3f;
-    z-index: 3;
+    background: #9a5f43;
+    z-index: 4;
     transition: height 0.1s, border-radius 0.1s;
   }
   .chris.talk .mouth {
@@ -326,30 +531,32 @@ import Layout from '../layouts/Layout.astro';
     width: 104px;
     height: 82px;
     margin: 0 auto;
-    background: var(--slate);
+    background: var(--shirt);
     border-radius: 30px 30px 16px 16px;
     z-index: 1;
-    box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.05), inset 0 2px 0 rgba(255, 255, 255, 0.5);
   }
   .collar {
     position: absolute;
-    top: 0;
+    top: -2px;
     left: 50%;
     transform: translateX(-50%);
-    width: 26px;
-    height: 16px;
+    width: 30px;
+    height: 15px;
     background: var(--skin);
     border-radius: 0 0 40px 40px;
+    box-shadow: 0 2px 0 var(--skin-sh);
   }
   .arm {
     position: absolute;
     top: 14px;
     width: 20px;
     height: 58px;
-    background: var(--slate);
+    background: var(--shirt);
     border-radius: 12px;
     z-index: 0;
     transform-origin: top center;
+    box-shadow: inset -3px 0 0 rgba(0, 0, 0, 0.05);
   }
   .arm.l {
     left: -6px;
@@ -375,330 +582,20 @@ import Layout from '../layouts/Layout.astro';
     }
   }
 
-  /* ── BOTS (stacked, middle) ── */
-  .swarm {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    z-index: 2;
-  }
-  .bot {
-    position: relative;
-    width: 64px;
-    flex: none;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .bot {
-      animation: bob 4s ease-in-out infinite;
-    }
-  }
-  @keyframes bob {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-5px);
-    }
-  }
-  .bot .ant {
-    position: absolute;
-    left: 50%;
-    top: -15px;
-    width: 2px;
-    height: 15px;
-    background: var(--ink-faint);
-    transform: translateX(-50%);
-  }
-  .bot .ant::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: -6px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    transform: translateX(-50%);
-    background: var(--bh);
-    box-shadow: 0 0 0 0 var(--bh);
-    animation: pulse 2.2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-      opacity: 0.6;
-    }
-    50% {
-      box-shadow: 0 0 10px 1px var(--bh);
-      opacity: 1;
-    }
-  }
-  .bot .rbody {
-    position: relative;
-    width: 58px;
-    height: 50px;
-    margin: 0 auto;
-    border-radius: 16px;
-    background: var(--bh);
-    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.1), 0 12px 22px -12px rgba(35, 33, 29, 0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: box-shadow 0.3s;
-  }
-  .bot.busy .rbody {
-    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.1),
-      0 0 0 3px color-mix(in oklch, var(--bh) 30%, transparent),
-      0 12px 22px -12px rgba(35, 33, 29, 0.55);
-  }
-  .bot .face {
-    width: 38px;
-    height: 24px;
-    border-radius: 9px;
-    background: #20201d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .bot .peye {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #fff;
-    opacity: 0.85;
-    animation: look 5s ease-in-out infinite;
-    transition: box-shadow 0.3s;
-  }
-  @keyframes look {
-    0%,
-    40%,
-    100% {
-      transform: translateX(0);
-    }
-    55%,
-    75% {
-      transform: translateX(2px);
-    }
-  }
-  .bot.busy .peye {
-    box-shadow: 0 0 7px 1px var(--bh);
-    opacity: 1;
-  }
-  .bot .fin {
-    position: absolute;
-    top: 16px;
-    width: 8px;
-    height: 18px;
-    border-radius: 5px;
-    background: var(--bh);
-    filter: brightness(0.9);
-  }
-  .bot .fin.l {
-    left: -4px;
-  }
-  .bot .fin.r {
-    right: -4px;
-  }
-  .bot .glow {
-    position: absolute;
-    left: 50%;
-    bottom: -9px;
-    width: 44px;
-    height: 10px;
-    transform: translateX(-50%);
-    background: radial-gradient(
-      50% 50% at 50% 50%,
-      color-mix(in oklch, var(--bh) 55%, transparent),
-      transparent 70%
-    );
-    filter: blur(1px);
-    opacity: 0.55;
-  }
-
-  /* thinking dots — face the repos (right) */
-  .think {
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translate(9px, -50%);
-    display: flex;
-    gap: 4px;
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    padding: 6px 9px;
-    box-shadow: 0 8px 18px -12px rgba(35, 33, 29, 0.6);
-    transition: opacity 0.25s;
-    z-index: 4;
-  }
-  .think i {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--ink-faint);
-    animation: tdot 1.5s ease-in-out infinite;
-  }
-  .think i:nth-child(2) {
-    animation-delay: 0.22s;
-  }
-  .think i:nth-child(3) {
-    animation-delay: 0.44s;
-  }
-  @keyframes tdot {
-    0%,
-    65%,
-    100% {
-      opacity: 0.25;
-      transform: translateY(0);
-    }
-    30% {
-      opacity: 1;
-      transform: translateY(-3px);
-    }
-  }
-
-  /* question to Chris — faces left */
-  .qbub {
-    position: absolute;
-    right: 100%;
-    top: 50%;
-    width: 172px;
-    transform: translate(-11px, -50%) scale(0.95);
-    transform-origin: 100% 50%;
-    background: #fff;
-    border: 1.5px solid var(--bh);
-    border-radius: 14px;
-    padding: 9px 12px;
-    font-size: 13px;
-    line-height: 1.38;
-    color: var(--ink);
-    text-align: right;
-    box-shadow: 0 2px 4px rgba(35, 33, 29, 0.04), 0 18px 34px -20px rgba(35, 33, 29, 0.5);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s, transform 0.3s;
-    z-index: 6;
-  }
-  .qbub::after {
-    content: '';
-    position: absolute;
-    right: -8px;
-    top: 50%;
-    width: 14px;
-    height: 14px;
-    transform: translateY(-50%) rotate(45deg);
-    background: #fff;
-    border-right: 1.5px solid var(--bh);
-    border-top: 1.5px solid var(--bh);
-  }
-  .bot.asking .qbub {
-    opacity: 1;
-    transform: translate(-11px, -50%) scale(1);
-  }
-
-  /* ── REPOS (right) ── */
-  .repos {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 13px;
-    z-index: 2;
-  }
-  .repos .kick {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 1px;
-  }
-  .repo {
-    position: relative;
-    background: #fff;
-    border: 1px solid var(--rule);
-    border-radius: 14px;
-    padding: 13px 15px;
-    box-shadow: 0 1px 2px rgba(35, 33, 29, 0.03), 0 14px 30px -24px rgba(35, 33, 29, 0.4);
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-  }
-  .repo.active {
-    border-color: var(--rc);
-    box-shadow: 0 0 0 3px color-mix(in oklch, var(--rc) 22%, transparent),
-      0 16px 30px -22px rgba(35, 33, 29, 0.45);
-    transform: translateX(-2px);
-  }
-  .repo .rtop {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .repo .dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--rc);
-    flex: none;
-  }
-  .repo .rname {
-    font-family: var(--mono);
-    font-size: 13.5px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .repo .rmeta {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    color: var(--ink-faint);
-    margin-top: 5px;
-    display: flex;
-    gap: 8px;
-  }
-  .repo .ract {
-    margin-top: 9px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    padding-top: 8px;
-    border-top: 1px solid var(--rule);
-    min-height: 16px;
-  }
-  .repo .rmode {
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: var(--ink-faint);
-    transition: color 0.2s;
-  }
-  .repo.active .rmode {
-    color: var(--rc);
-  }
-  .repo .rfile {
-    color: var(--ink-faint);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .repo.active .rfile {
-    color: var(--ink-soft);
-  }
-
   /* ── CONTENT (decoupled) ── */
   .content {
-    margin-top: 30px;
+    margin-top: 0;
     padding-top: 30px;
     border-top: 1px solid var(--rule);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: 26px 40px;
     align-items: start;
+  }
+  .side {
+    position: sticky;
+    top: 20px;
+    align-self: start;
   }
   .side .kicker {
     font-family: var(--mono);
@@ -769,13 +666,95 @@ import Layout from '../layouts/Layout.astro';
     opacity: 1;
     color: var(--bh);
   }
+  .cmd.on .ar {
+    transform: none;
+  }
+  .cmd[data-key='writing'].on .ar {
+    transform: rotate(180deg);
+  }
+
+  .sublist {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sublist.open {
+    grid-template-rows: 1fr;
+  }
+  .sublist > div {
+    min-height: 0;
+  }
+  .sub {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 3px 0 8px 0;
+  }
+  .subitem {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 10px 8px 29px;
+    margin-left: -10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+    transition: color 0.2s, background 0.2s;
+  }
+  .subitem:hover {
+    color: var(--ink);
+    background: color-mix(in oklch, var(--bh) 10%, transparent);
+  }
+  .subitem.on {
+    color: var(--ink);
+    background: color-mix(in oklch, var(--bh) 8%, transparent);
+  }
+  .subitem .st {
+    line-height: 1.3;
+  }
+  .subitem .sy {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    flex: none;
+  }
+
+  .article h2 {
+    margin-bottom: 5px;
+  }
+  .article .asub {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-faint);
+    margin: 0 0 18px;
+  }
+  .article p {
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    line-height: 1.62;
+    margin: 0 0 13px;
+  }
+  .article p:last-child {
+    margin-bottom: 0;
+  }
+  .article em {
+    font-style: italic;
+    color: var(--ink);
+  }
 
   .panel {
     width: 100%;
     background: none;
     border: 0;
     border-radius: 0;
-    overflow: hidden;
   }
   .panel.exit {
     opacity: 0;
@@ -802,12 +781,11 @@ import Layout from '../layouts/Layout.astro';
     background: var(--bh);
   }
   .pbody {
-    padding: 4px 0 0;
+    padding: 9px 0 0;
   }
   .pbody > * {
     opacity: 0;
-    transform: translateY(10px);
-    animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: rise 0.45s ease forwards;
   }
   .pbody > *:nth-child(1) {
     animation-delay: 0.05s;
@@ -827,7 +805,6 @@ import Layout from '../layouts/Layout.astro';
   @keyframes rise {
     to {
       opacity: 1;
-      transform: none;
     }
   }
 
@@ -853,6 +830,7 @@ import Layout from '../layouts/Layout.astro';
   }
   .jrow:first-of-type {
     border-top: none;
+    padding-top: 0;
   }
   .jrow .h {
     font-size: 17px;
@@ -935,21 +913,21 @@ import Layout from '../layouts/Layout.astro';
   .links {
     display: flex;
     flex-wrap: wrap;
-    gap: 9px;
-    margin-top: 4px;
+    gap: 8px 22px;
+    margin-top: 20px;
   }
   .links a {
     font-family: var(--mono);
-    font-size: 12.5px;
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-    padding: 10px 15px;
+    font-size: 13.5px;
     color: var(--ink);
-    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 4px;
+    transition: color 0.2s, text-decoration-color 0.2s;
   }
   .links a:hover {
-    border-color: var(--slate);
-    transform: translateY(-2px);
+    color: var(--slate);
+    text-decoration-color: var(--slate);
   }
   .contact-lede {
     font-size: 16px;
@@ -959,49 +937,12 @@ import Layout from '../layouts/Layout.astro';
   }
 
   @media (max-width: 900px) {
-    .scene {
-      grid-template-columns: 1fr;
-      gap: 26px;
-      align-items: start;
-      min-height: 0;
-      padding-top: 8px;
-    }
-    .wires {
-      display: none;
-    }
-    .cast {
-      align-items: center;
-    }
-    .swarm {
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 44px 40px;
-      padding: 18px 0;
-    }
-    .qbub {
-      right: auto;
-      left: 50%;
-      top: auto;
-      bottom: 100%;
-      transform: translate(-50%, -9px) scale(0.95);
-      text-align: center;
-    }
-    .qbub::after {
-      right: auto;
-      left: 50%;
-      top: auto;
-      bottom: -8px;
-      transform: translateX(-50%) rotate(45deg);
-      border: 0;
-      border-right: 1.5px solid var(--bh);
-      border-bottom: 1.5px solid var(--bh);
-    }
-    .bot.asking .qbub {
-      transform: translate(-50%, -9px) scale(1);
-    }
     .content {
       grid-template-columns: 1fr;
       gap: 22px;
+    }
+    .side {
+      position: static;
     }
     .top,
     .stage {
@@ -1024,64 +965,79 @@ import Layout from '../layouts/Layout.astro';
       <text x="50" y="53" text-anchor="middle" dominant-baseline="central" font-family="'Figtree',sans-serif" font-weight="700" font-size="76" fill="none" stroke="url(#crb)" stroke-width="6.5" paint-order="stroke" stroke-linejoin="round" stroke-linecap="round">C</text></svg>`;
   })();
 
-  /* Content sections — driven by the pills, NOT the robots */
+  /* Content sections — driven by the pills */
   const SECTIONS = [
+    {
+      key: 'about',
+      hue: '#3E5575',
+      label: 'About',
+      noHead: true,
+      panel: `<p class="lede" style="margin-bottom:14px">Software engineer with 15 years of experience across product and platform. An expert in iOS development, and formerly a founder. Now focused on integrating AI into user-facing features and the development stack.</p>
+        <p class="lede">In between, I spent a couple of years as a freelance iOS consultant — taking on client work while pursuing side projects and traveling around the world.</p>`,
+    },
     {
       key: 'work',
       hue: '#2F9E94',
-      label: "Where I've worked",
-      panel: `<h2>Work</h2>
-        <div class="jrow"><div class="h">Block <span class="r">· Senior Software Engineer</span></div><div class="y">2016–2024</div>
-          <div class="d">Payments infrastructure and developer tooling at scale — services running millions of transactions a day, and the quiet platform work that made everyone else faster.</div></div>
-        <div class="jrow"><div class="h">Central <span class="r">· Founder &amp; sole engineer</span></div><div class="y">2024–now</div>
-          <div class="d">Designed and built a calm, tech-forward app end to end, for iOS and Mac.</div></div>`,
+      label: 'Experience',
+      noHead: true,
+      panel: `<div class="jrow"><div class="h">Staff Software Engineer <span class="r">· Block (Square)</span></div><div class="y">2018–2026</div>
+          <div class="d">Tech lead on the shared Cart Platform across every POS, and on a two-year Retail checkout overhaul — data models to UI, serving millions of daily users.</div></div>
+        <div class="jrow"><div class="h">Senior iOS Developer <span class="r">· Verst</span></div><div class="y">2016–2017</div>
+          <div class="d">Owned a mobile blogging tool from zero to launch and drove Swift adoption.</div></div>
+        <div class="jrow"><div class="h">Co-Founder <span class="r">· Collectively Assembled</span></div><div class="y">2012–2013</div>
+          <div class="d">Co-founded a fashion startup, raised $500k, shipped two apps in a year — one featured in the App Store.</div></div>
+        <div class="jrow"><div class="h">B.A. Economics <span class="r">· UCLA</span></div><div class="y">2011</div>
+          <div class="d">McKelvey entrepreneurship scholar. Built a flashcard app featured in the App Store, sold it after graduation.</div></div>`,
     },
     {
       key: 'central',
       hue: '#D49A28',
       label: 'Side projects',
-      panel: `<div class="central"><div class="ic">${CENTRAL_ICO}</div><div>
-        <h2 style="margin-bottom:2px">Central</h2>
+      noHead: true,
+      panel: `<h2 style="margin-bottom:2px">Central</h2>
         <p class="lede">My one and only side project — a friendly home for your todos and pursuits: recipes to try, books to read, movies to watch, people to keep up with. Tech-forward, but warm. Designed and built end to end.</p>
-        <a class="go" href="#" target="_blank" rel="noopener">Visit central.app ↗</a>
-      </div></div>`,
+        <a class="go" href="#" target="_blank" rel="noopener">Visit central.app ↗</a>`,
     },
     {
       key: 'writing',
       hue: '#E0523B',
       label: 'My writing',
-      panel: `<h2>Writing</h2>
-        <div class="plist">
-          <a href="#" target="_blank" rel="noopener"><span class="t">The loading state is the product</span><span class="y">2026</span></a>
-          <a href="#" target="_blank" rel="noopener"><span class="t">Eight years on one payments platform, and what stuck</span><span class="y">2026</span></a>
-          <a href="#" target="_blank" rel="noopener"><span class="t">Designing Central's icon</span><span class="y">2026</span></a>
-          <a href="#" target="_blank" rel="noopener"><span class="t">Boring technology is a competitive advantage</span><span class="y">2025</span></a>
-        </div>`,
+      noHead: true,
+      articles: [
+        {
+          title: 'The loading state is the product',
+          year: '2026',
+          body: `<p>We treat loading states as the gap between the real screens — a spinner to apologize for the wait. But for anyone on a slow connection, the loading state <em>is</em> the product. It's the first thing they see and, on a bad day, the only thing.</p><p>The fix isn't a fancier spinner. It's designing the empty and pending states with the same care as the happy path: skeletons that match the real layout, optimistic writes that make a tap feel instant, and copy that tells the truth about what's happening.</p><p>Do it well and the wait disappears. Do it badly and no amount of polish downstream will save you.</p>`,
+        },
+        {
+          title: 'Eight years on one payments platform',
+          year: '2026',
+          body: `<p>I spent eight years on essentially one system. That's unfashionable advice in an industry that rewards job-hopping, but staying taught me things you can only learn on a long timeline.</p><p>You watch your own decisions age. The clever abstraction that felt elegant in year two becomes the thing you curse in year five. You learn which shortcuts compound and which quietly disappear. Mostly you learn humility about what “done” means.</p><p>The platform work that mattered most was never glamorous. It was the boring reliability, the migration nobody noticed, the API that just kept working.</p><p>When I joined, the checkout path was a single monolithic method that had grown for years — a function so long that scrolling through it felt like reading a novel with no chapters. Nobody had written it maliciously. Every line had been added by a reasonable person solving a reasonable problem on a reasonable deadline. That's the thing about legacy code: it's just decisions, stacked.</p><p>The first year I mostly read. I traced money through the system until I could close my eyes and see it move. I learned where the bodies were buried — the tax edge cases, the currency rounding that had to happen in exactly one place, the retry logic that would double-charge a customer if you looked at it wrong. You cannot refactor what you do not understand, and understanding a payments system takes longer than anyone wants it to.</p><p>The second year I started to change things, carefully. The rule I gave myself was simple: never a rewrite, always a strangler. Wrap the old path, route a sliver of traffic through the new one, compare the outputs byte for byte, and only widen the pipe when the numbers matched for a week straight. It was slow. It was also the only approach that let me sleep.</p><p>By year four we had replaced the monolith without a single customer noticing. That is the strange, invisible reward of platform work: the highest compliment is silence. No incident channel, no angry merchant, no VP asking what happened to the numbers. Just money moving, quietly, the way it is supposed to.</p><p>Years five through eight were about leverage. Once the foundation was trustworthy, features that used to take a quarter took a week. New engineers could ship on their first day because the sharp edges were gone. I spent less time writing code and more time in documents and diagrams, trying to give twenty people the same mental model I had spent four years building. That translation — from what is in your head to what is in the team's head — turns out to be most of what senior engineering actually is.</p><p>What surprised me most was how much of the value compounded. A good abstraction does not just save you the afternoon you wrote it; it saves every afternoon after, for everyone. A flaky test you finally fix stops stealing an hour a week from the whole team, forever. Reliability is a savings account, and staying long enough to watch the interest accrue changed how I think about the work.</p><p>People ask if I regret not moving around more, chasing titles and comp. Honestly, no. There is a particular satisfaction in living with your own decisions long enough to be humbled by them, to fix them, and to watch the fixed version hold. You do not get that from a two-year stint. You get it from staying past the point where it is exciting, into the point where it is yours.</p><p>The platform outlasted my time on it, which was always the goal. The best thing you can build is something that no longer needs you — and the only way to know you have built it is to still be there when someone else ships on top of it without ever knowing your name.</p>`,
+        },
+        {
+          title: "Designing Central's icon",
+          year: '2026',
+          body: `<p>Central needed an icon that felt warm and technical at once — a home for your thoughts that didn't look like a productivity tool shouting at you.</p><p>I went through dozens of directions before landing on a single letterform stroked in a soft rainbow gradient over a deep slate ground. The gradient nods to the range of things you keep in Central; the slate keeps it grounded and calm.</p><p>The lesson, again: subtraction. The final mark is the simplest one I drew.</p>`,
+        },
+        {
+          title: 'Boring technology is a competitive advantage',
+          year: '2025',
+          body: `<p>Every team has a budget for novelty, and it's smaller than you think. Spend it on the one or two things that are genuinely core to what you're building, and be aggressively boring about everything else.</p><p>Boring technology has a property new technology can't offer: you already know how it fails. That knowledge is worth more than any feature list when it's 2am and production is down.</p><p>The goal was never to use the most interesting tools. It was to ship something people can rely on.</p>`,
+        },
+      ],
     },
     {
       key: 'contact',
       hue: '#6E5AA8',
       label: 'Get in touch',
+      noHead: true,
       panel: `<h2>Say hello</h2>
-        <p class="contact-lede">Looking for a careful engineer, or just have a good problem to chew on? My inbox is open.</p>
         <div class="links">
-          <a href="mailto:chris@chrisparcel.com">chris@chrisparcel.com</a>
+          <a href="mailto:hello@chrisparcel.com">hello@chrisparcel.com</a>
           <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
-          <a href="#" target="_blank" rel="noopener">Bluesky ↗</a>
           <a href="#" target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a href="#" target="_blank" rel="noopener">Résumé ↓</a>
         </div>`,
     },
-  ];
-
-  /* Ambient robots — middle column, stacked */
-  const BOTS = [{ hue: '#2F9E94' }, { hue: '#D49A28' }, { hue: '#E0523B' }, { hue: '#6E5AA8' }];
-
-  /* Repos — right column */
-  const REPOS = [
-    { id: 'ios', name: 'central-ios', branch: 'main', lang: 'Swift', hue: '#E0523B', files: ['SyncEngine.swift', 'TodayView.swift', 'Store.swift', 'Keychain.swift'] },
-    { id: 'core', name: 'central-core', branch: 'main', lang: 'TypeScript', hue: '#3178C6', files: ['sync.ts', 'schema.ts', 'api.ts', 'queue.ts'] },
-    { id: 'android', name: 'central-android', branch: 'develop', lang: 'Kotlin', hue: '#6E5AA8', files: ['SyncWorker.kt', 'HomeScreen.kt', 'Repo.kt', 'Db.kt'] },
   ];
 
   /* Technical Q&A — a bot asks, Chris answers */
@@ -1101,72 +1057,132 @@ import Layout from '../layouts/Layout.astro';
   ];
 
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const SVGNS = 'http://www.w3.org/2000/svg';
   const chris = document.getElementById('chris');
   const bubble = document.getElementById('bubble');
-  const swarm = document.getElementById('swarm');
-  const reposEl = document.getElementById('repos');
   const cmds = document.getElementById('cmds');
   const panel = document.getElementById('panel');
-  const scene = document.querySelector('.scene');
-  const wires = document.getElementById('wires');
-
-  /* build robots */
-  const botEls = BOTS.map((b, i) => {
-    const el = document.createElement('div');
-    el.className = 'bot';
-    el.style.setProperty('--bh', b.hue);
-    el.style.animationDelay = i * 0.5 + 's';
-    el.innerHTML = `
-      <div class="qbub"></div>
-      <div class="think"><i></i><i></i><i></i></div>
-      <span class="ant"></span>
-      <span class="fin l"></span><span class="fin r"></span>
-      <div class="rbody"><div class="face"><span class="peye"></span><span class="peye"></span></div></div>
-      <div class="glow"></div>`;
-    el.querySelectorAll('.peye').forEach((e) => (e.style.animationDelay = i * 0.7 + 's'));
-    swarm.appendChild(el);
-    return el;
-  });
-
-  /* build repos */
-  const repoEls = REPOS.map((r) => {
-    const el = document.createElement('div');
-    el.className = 'repo';
-    el.style.setProperty('--rc', r.hue);
-    el.innerHTML = `
-      <div class="rtop"><span class="dot"></span><span class="rname">${r.name}</span></div>
-      <div class="rmeta"><span>${r.lang}</span><span>· ${r.branch}</span></div>
-      <div class="ract"><span class="rmode">idle</span><span class="rfile"></span></div>`;
-    reposEl.appendChild(el);
-    return el;
-  });
+  const queueEl = document.getElementById('queue');
+  const HUES = ['#2F9E94', '#D49A28', '#E0523B', '#6E5AA8', '#3178C6', '#3E5575'];
 
   /* build command pills */
-  let current = null;
+  let current = null,
+    curArticle = {};
   SECTIONS.forEach((s) => {
     const c = document.createElement('button');
     c.className = 'cmd';
     c.dataset.key = s.key;
     c.style.setProperty('--bh', s.hue);
-    c.innerHTML = `<span class="dot"></span>${s.label}<span class="ar">→</span>`;
+    c.innerHTML = `<span class="dot"></span>${s.label}<span class="ar">${s.articles ? '▾' : '→'}</span>`;
     c.addEventListener('click', () => dispatch(s.key));
     cmds.appendChild(c);
+    if (s.articles) {
+      const wrap = document.createElement('div');
+      wrap.className = 'sublist';
+      wrap.dataset.key = s.key;
+      wrap.style.setProperty('--bh', s.hue);
+      const inner = document.createElement('div');
+      const sub = document.createElement('div');
+      sub.className = 'sub';
+      s.articles.forEach((a, i) => {
+        const b = document.createElement('button');
+        b.className = 'subitem';
+        b.dataset.idx = i;
+        b.innerHTML = `<span class="st">${a.title}</span><span class="sy">${a.year}</span>`;
+        b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          loadArticle(s.key, i);
+        });
+        sub.appendChild(b);
+      });
+      inner.appendChild(sub);
+      wrap.appendChild(inner);
+      cmds.appendChild(wrap);
+    }
   });
+
+  function renderArticleHTML(s, i) {
+    const a = s.articles[i];
+    return `<div class="article"><h2>${a.title}</h2><div class="asub">${a.year}</div>${a.body}</div>`;
+  }
+  const sideEl = document.querySelector('.side');
+  const workArea = document.querySelector('.work-area');
+  let scrollRaf = 0;
+  // Only scroll to the top first when swapping would otherwise jump — i.e. when the
+  // right column currently extends below the left column, so collapsing it would
+  // yank the page height out from under the scroll. Otherwise swap in place.
+  function transitionPanel(fillFn) {
+    if (!current) {
+      fillFn();
+      return;
+    }
+    const swapInPlace = () => {
+      panel.classList.add('exit');
+      setTimeout(() => {
+        fillFn();
+        panel.classList.remove('exit');
+      }, 200);
+    };
+    const wouldJump = workArea.getBoundingClientRect().bottom > sideEl.getBoundingClientRect().bottom + 1;
+    if (!wouldJump || window.scrollY <= 1) {
+      swapInPlace();
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    cancelAnimationFrame(scrollRaf);
+    const start = performance.now();
+    let faded = false;
+    const FADE_AT = 300;
+    const settle = () => {
+      const sy = window.scrollY;
+      if (!faded && sy <= FADE_AT) {
+        panel.classList.add('exit');
+        faded = true;
+      }
+      if (sy <= 2 || performance.now() - start > 1400) {
+        fillFn();
+        requestAnimationFrame(() => panel.classList.remove('exit'));
+      } else {
+        scrollRaf = requestAnimationFrame(settle);
+      }
+    };
+    scrollRaf = requestAnimationFrame(settle);
+  }
+  function loadArticle(key, i) {
+    const s = SECTIONS.find((x) => x.key === key);
+    curArticle[key] = i;
+    const wrap = cmds.querySelector(`.sublist[data-key="${key}"]`);
+    if (wrap) [...wrap.querySelectorAll('.subitem')].forEach((b) => b.classList.toggle('on', +b.dataset.idx === i));
+    panel.style.setProperty('--bh', s.hue);
+    transitionPanel(() => {
+      panel.innerHTML = `<div class="pbody">${renderArticleHTML(s, i)}</div>`;
+    });
+  }
+
   function dispatch(key) {
     if (key === current) return;
+    const prev = current;
     const s = SECTIONS.find((x) => x.key === key);
-    [...cmds.children].forEach((c) => c.classList.toggle('on', c.dataset.key === key));
-    const render = () => {
+    [...cmds.children].forEach((c) => {
+      if (c.classList.contains('cmd')) c.classList.toggle('on', c.dataset.key === key);
+    });
+    cmds.querySelectorAll('.sublist').forEach((w) => w.classList.toggle('open', w.dataset.key === key));
+    const fill = () => {
       panel.style.setProperty('--bh', s.hue);
-      panel.innerHTML = `<div class="phead"><span class="pd"></span>${s.label}</div><div class="pbody">${s.panel}</div>`;
-      panel.classList.remove('exit');
+      if (s.articles) {
+        const i = curArticle[key] ?? 0;
+        panel.innerHTML = `<div class="pbody">${renderArticleHTML(s, i)}</div>`;
+        const wrap = cmds.querySelector(`.sublist[data-key="${key}"]`);
+        if (wrap) [...wrap.querySelectorAll('.subitem')].forEach((b) => b.classList.toggle('on', +b.dataset.idx === i));
+      } else {
+        panel.innerHTML = `${s.noHead ? '' : `<div class="phead"><span class="pd"></span>${s.label}</div>`}<div class="pbody">${s.panel}</div>`;
+      }
     };
-    if (current) {
-      panel.classList.add('exit');
-      setTimeout(render, 240);
-    } else render();
     current = key;
+    if (!prev) {
+      fill();
+      return;
+    }
+    transitionPanel(fill);
   }
 
   /* Chris talking */
@@ -1196,138 +1212,62 @@ import Layout from '../layouts/Layout.astro';
     })();
   }
 
-  /* ── connection wires: bot → repo, read/write ── */
-  function anchor(el, side) {
-    const s = scene.getBoundingClientRect(),
-      r = el.getBoundingClientRect();
-    return { x: (side === 'right' ? r.right : r.left) - s.left, y: r.top - s.top + r.height / 2 };
+  /* ── the queue: agents line up, ask, get answered, then leave ── */
+  const SLOTS = 4,
+    STEP = 92;
+  let hueI = 0,
+    lastQ = -1,
+    queue = [];
+  function makeAgent() {
+    const el = document.createElement('div');
+    el.className = 'agent enter';
+    el.style.setProperty('--ah', HUES[hueI++ % HUES.length]);
+    el.innerHTML = `<div class="qbub"></div><div class="think"><i></i><i></i><i></i></div><div class="arig"><span class="ant"></span><div class="abody"><span class="aeye"></span><span class="aeye"></span></div><span class="glow"></span></div>`;
+    queueEl.appendChild(el);
+    return el;
   }
-  function connect(botEl, repoEl, mode, file, hue) {
-    const from = anchor(botEl, 'right'),
-      to = anchor(repoEl, 'left');
-    const cx = (to.x - from.x) * 0.55;
-    const d = `M${from.x.toFixed(1)},${from.y.toFixed(1)} C ${(from.x + cx).toFixed(1)},${from.y.toFixed(1)} ${(to.x - cx).toFixed(1)},${to.y.toFixed(1)} ${to.x.toFixed(1)},${to.y.toFixed(1)}`;
-    const g = document.createElementNS(SVGNS, 'g');
-
-    const path = document.createElementNS(SVGNS, 'path');
-    path.setAttribute('d', d);
-    path.setAttribute('class', 'wire ' + mode);
-    path.setAttribute('stroke', hue);
-    path.setAttribute('stroke-width', '1.5');
-    path.setAttribute('stroke-dasharray', '1 7');
-    g.appendChild(path);
-
-    const dot = document.createElementNS(SVGNS, 'circle');
-    dot.setAttribute('r', '3.1');
-    dot.setAttribute('fill', hue);
-    dot.setAttribute('class', 'wpulse');
-    if (!reduce) {
-      const mo = document.createElementNS(SVGNS, 'animateMotion');
-      mo.setAttribute('dur', '0.85s');
-      mo.setAttribute('repeatCount', 'indefinite');
-      mo.setAttribute('path', d);
-      mo.setAttribute('calcMode', 'linear');
-      mo.setAttribute('keyPoints', mode === 'read' ? '1;0' : '0;1');
-      mo.setAttribute('keyTimes', '0;1');
-      dot.appendChild(mo);
-    } else {
-      dot.setAttribute('cx', to.x);
-      dot.setAttribute('cy', to.y);
-    }
-    g.appendChild(dot);
-
-    const label = document.createElementNS(SVGNS, 'text');
-    label.setAttribute('x', ((from.x + to.x) / 2).toFixed(1));
-    label.setAttribute('y', ((from.y + to.y) / 2 - 7).toFixed(1));
-    label.setAttribute('text-anchor', 'middle');
-    label.setAttribute('class', 'wlabel');
-    label.setAttribute('fill', hue);
-    label.textContent = mode.toUpperCase();
-    g.appendChild(label);
-
-    wires.appendChild(g);
-    requestAnimationFrame(() => {
-      path.classList.add('on');
-      dot.classList.add('on');
-      label.classList.add('on');
-    });
-
-    // light up bot + repo
-    botEl.classList.add('busy');
-    repoEl.classList.add('active');
-    repoEl.querySelector('.rmode').textContent = mode.toUpperCase();
-    repoEl.querySelector('.rfile').textContent = file;
-
-    const life = 1600 + Math.random() * 900;
-    setTimeout(() => {
-      path.classList.remove('on');
-      dot.classList.remove('on');
-      label.classList.remove('on');
-    }, life);
-    setTimeout(() => {
-      botEl.classList.remove('busy');
-      repoEl.classList.remove('active');
-      repoEl.querySelector('.rmode').textContent = 'idle';
-      repoEl.querySelector('.rfile').textContent = '';
-      g.remove();
-    }, life + 450);
+  function place(el, slot) {
+    el.style.left = slot * STEP + 'px';
+  }
+  for (let i = 0; i < SLOTS; i++) {
+    const a = makeAgent();
+    queue.push(a);
+    place(a, i);
+  }
+  setTimeout(() => queue.forEach((a) => a.classList.remove('enter')), 40);
+  function nextQ() {
+    let n;
+    do {
+      n = Math.floor(Math.random() * QA.length);
+    } while (n === lastQ);
+    lastQ = n;
+    return QA[n];
   }
 
-  const MODES = ['read', 'read', 'write', 'write', 'read'];
-  let lastBotR = -1;
-  function repoLoop() {
-    const gap = 1400 + Math.random() * 1600;
+  function cycle() {
+    const front = queue[0];
+    if (!front) return;
+    const qa = nextQ();
+    front.classList.add('active', 'asking');
+    front.querySelector('.qbub').textContent = qa.q;
+    setTimeout(() => say('<b>' + qa.a + '</b>', 3200), 1300); // Chris answers
     setTimeout(() => {
-      let bi;
-      do {
-        bi = Math.floor(Math.random() * botEls.length);
-      } while (bi === lastBotR);
-      lastBotR = bi;
-      const ri = Math.floor(Math.random() * repoEls.length);
-      const repo = REPOS[ri];
-      const mode = MODES[Math.floor(Math.random() * MODES.length)];
-      const file = repo.files[Math.floor(Math.random() * repo.files.length)];
-      connect(botEls[bi], repoEls[ri], mode, file, repo.hue);
-      repoLoop();
-    }, gap);
-  }
-
-  /* Q&A loop — a bot asks Chris a technical question */
-  let lastBotQ = -1,
-    lastQ = -1;
-  function askLoop() {
-    const gap = 4600 + Math.random() * 3000;
-    setTimeout(() => {
-      let bi;
-      do {
-        bi = Math.floor(Math.random() * botEls.length);
-      } while (bi === lastBotQ);
-      lastBotQ = bi;
-      let qi;
-      do {
-        qi = Math.floor(Math.random() * QA.length);
-      } while (qi === lastQ);
-      lastQ = qi;
-      const bot = botEls[bi],
-        qa = QA[qi];
-      bot.querySelector('.qbub').textContent = qa.q;
-      bot.classList.add('asking');
-      setTimeout(() => say('<b>' + qa.a + '</b>', 3600), 1200);
-      setTimeout(() => bot.classList.remove('asking'), 4400);
-      askLoop();
-    }, gap);
+      // front leaves, line advances
+      front.classList.remove('asking');
+      front.classList.add('leave');
+      setTimeout(() => front.remove(), 520);
+      queue.shift();
+      queue.forEach((a, i) => place(a, i));
+      const na = makeAgent();
+      queue.push(na);
+      place(na, queue.length - 1);
+      setTimeout(() => na.classList.remove('enter'), 40);
+    }, 3600);
+    setTimeout(cycle, 5900);
   }
 
   /* intro, then start */
   dispatch('work');
-  setTimeout(
-    () =>
-      say(
-        "Hi — I'm <b>Chris</b>. These four read and write my repos, and ask when they're unsure.",
-        4600
-      ),
-    400
-  );
-  setTimeout(repoLoop, 1600);
-  setTimeout(askLoop, 5600);
+  setTimeout(() => say("Hi — I'm <b>Chris</b>. There's usually a small line of agents with a question or two.", 4200), 400);
+  setTimeout(cycle, 1600);
 </script>
