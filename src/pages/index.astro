@@ -1,20 +1,1333 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.jsx';
 ---
 
-<Layout title="Chris Parcel">
-  <main class="container">
-    <!-- client:load hydrates this React component on page load so Motion can animate it -->
-    <Hero client:load />
+<Layout
+  title="Chris Parcel"
+  description="Chris Parcel — software developer in Los Angeles. Work, projects, writing, and how to get in touch."
+>
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </Fragment>
 
-    <section id="about" style="padding-block: 6rem;">
-      <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); margin-top: 0;">About</h2>
-      <p style="color: var(--muted); max-width: 40rem;">
-        This is placeholder content. Static sections like this ship zero
-        JavaScript — only interactive islands (like the hero) are hydrated.
-        Add your real bio, projects, and links here.
-      </p>
-    </section>
-  </main>
+  <div class="top">
+    <span class="nm">Chris Parcel</span>
+    <span class="meta">Software developer · Los Angeles · open to work</span>
+  </div>
+
+  <div class="stage">
+    <!-- SCENE -->
+    <div class="scene">
+      <svg class="wires" id="wires"></svg>
+
+      <div class="cast">
+        <div class="bubble" id="bubble"></div>
+        <div class="chris" id="chris">
+          <div class="shadow"></div>
+          <div class="head">
+            <div class="hair"></div>
+            <div class="glasses">
+              <div class="lens"><span class="eye"></span></div>
+              <div class="bridge"></div>
+              <div class="lens"><span class="eye"></span></div>
+            </div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body">
+            <div class="collar"></div>
+            <div class="arm l"></div>
+            <div class="arm r"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swarm" id="swarm"></div>
+
+      <div class="repos" id="repos">
+        <div class="kick">Repositories</div>
+      </div>
+    </div>
+
+    <!-- CONTENT (decoupled from the robots) -->
+    <div class="content">
+      <div class="side">
+        <div class="cmds" id="cmds"></div>
+      </div>
+      <div class="work-area">
+        <div class="panel" id="panel"></div>
+      </div>
+    </div>
+  </div>
 </Layout>
+
+<style is:global>
+  .top {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 26px 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .top .nm {
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+  .top .meta {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.005em;
+    color: var(--ink-soft);
+  }
+
+  .stage {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 10px 40px 64px;
+  }
+
+  /* ── SCENE: me · bots · repos ── */
+  .scene {
+    position: relative;
+    display: grid;
+    grid-template-columns: 186px minmax(200px, 1fr) 296px;
+    gap: 18px;
+    align-items: center;
+    min-height: 64vh;
+    padding-top: 26px;
+  }
+
+  .wires {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+  .wire {
+    fill: none;
+    stroke-linecap: round;
+    opacity: 0;
+    transition: opacity 0.45s;
+  }
+  .wire.on {
+    opacity: 0.45;
+    animation: march 1s linear infinite;
+  }
+  .wire.read.on {
+    animation-direction: reverse;
+  }
+  @keyframes march {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  .wpulse {
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .wpulse.on {
+    opacity: 1;
+  }
+  .wlabel {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .wlabel.on {
+    opacity: 0.85;
+  }
+
+  /* Chris */
+  .cast {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .bubble {
+    position: relative;
+    max-width: 196px;
+    margin-bottom: 14px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    padding: 13px 16px;
+    box-shadow: 0 1px 2px rgba(35, 33, 29, 0.04), 0 16px 34px -22px rgba(35, 33, 29, 0.3);
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .bubble.show {
+    opacity: 1;
+    transform: none;
+  }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -9px;
+    width: 16px;
+    height: 16px;
+    transform: translateX(-50%) rotate(45deg);
+    background: #fff;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bubble b {
+    font-weight: 700;
+  }
+
+  .chris {
+    position: relative;
+    width: 150px;
+    flex: none;
+    transform-origin: 50% 100%;
+  }
+  .chris.talk {
+    animation: sway 1.4s ease-in-out;
+  }
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    25% {
+      transform: rotate(-1.4deg);
+    }
+    60% {
+      transform: rotate(1deg);
+    }
+  }
+  .chris .shadow {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 120px;
+    height: 16px;
+    transform: translateX(-50%);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(35, 33, 29, 0.18), transparent 70%);
+  }
+  .head {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--skin);
+    margin: 0 auto -10px;
+    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.04);
+    z-index: 2;
+  }
+  .hair {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    width: 98px;
+    height: 52px;
+    transform: translateX(-50%);
+    background: var(--hair);
+    border-radius: 50px 50px 16px 16px;
+    z-index: 1;
+  }
+  .hair::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    bottom: -6px;
+    width: 16px;
+    height: 20px;
+    background: var(--hair);
+    border-radius: 0 0 8px 8px;
+  }
+  .glasses {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 3;
+  }
+  .lens {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid #2b2924;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+  }
+  .bridge {
+    width: 7px;
+    height: 2.5px;
+    background: #2b2924;
+  }
+  .eye {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2b2924;
+    transform: translateX(-50%);
+    transition: transform 0.08s;
+  }
+  .lens .eye {
+    transform: translateX(-50%);
+  }
+  .chris.blink .eye {
+    transform: translateX(-50%) scaleY(0.12);
+  }
+  .mouth {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    border-radius: 3px;
+    background: #8a5a3f;
+    z-index: 3;
+    transition: height 0.1s, border-radius 0.1s;
+  }
+  .chris.talk .mouth {
+    animation: talk 0.28s steps(1) infinite;
+  }
+  @keyframes talk {
+    0% {
+      height: 3px;
+      border-radius: 3px;
+    }
+    50% {
+      height: 11px;
+      width: 16px;
+      border-radius: 0 0 10px 10px;
+    }
+  }
+  .body {
+    position: relative;
+    width: 104px;
+    height: 82px;
+    margin: 0 auto;
+    background: var(--slate);
+    border-radius: 30px 30px 16px 16px;
+    z-index: 1;
+    box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.06);
+  }
+  .collar {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 16px;
+    background: var(--skin);
+    border-radius: 0 0 40px 40px;
+  }
+  .arm {
+    position: absolute;
+    top: 14px;
+    width: 20px;
+    height: 58px;
+    background: var(--slate);
+    border-radius: 12px;
+    z-index: 0;
+    transform-origin: top center;
+  }
+  .arm.l {
+    left: -6px;
+    transform: rotate(9deg);
+  }
+  .arm.r {
+    right: -6px;
+    transform: rotate(-9deg);
+  }
+  .chris.talk .arm.r {
+    animation: point 1.4s ease-in-out;
+  }
+  @keyframes point {
+    0%,
+    100% {
+      transform: rotate(-9deg);
+    }
+    40% {
+      transform: rotate(-42deg);
+    }
+    70% {
+      transform: rotate(-30deg);
+    }
+  }
+
+  /* ── BOTS (stacked, middle) ── */
+  .swarm {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    z-index: 2;
+  }
+  .bot {
+    position: relative;
+    width: 64px;
+    flex: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bot {
+      animation: bob 4s ease-in-out infinite;
+    }
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+  .bot .ant {
+    position: absolute;
+    left: 50%;
+    top: -15px;
+    width: 2px;
+    height: 15px;
+    background: var(--ink-faint);
+    transform: translateX(-50%);
+  }
+  .bot .ant::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    background: var(--bh);
+    box-shadow: 0 0 0 0 var(--bh);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+      opacity: 0.6;
+    }
+    50% {
+      box-shadow: 0 0 10px 1px var(--bh);
+      opacity: 1;
+    }
+  }
+  .bot .rbody {
+    position: relative;
+    width: 58px;
+    height: 50px;
+    margin: 0 auto;
+    border-radius: 16px;
+    background: var(--bh);
+    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.1), 0 12px 22px -12px rgba(35, 33, 29, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.3s;
+  }
+  .bot.busy .rbody {
+    box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.1),
+      0 0 0 3px color-mix(in oklch, var(--bh) 30%, transparent),
+      0 12px 22px -12px rgba(35, 33, 29, 0.55);
+  }
+  .bot .face {
+    width: 38px;
+    height: 24px;
+    border-radius: 9px;
+    background: #20201d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .bot .peye {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.85;
+    animation: look 5s ease-in-out infinite;
+    transition: box-shadow 0.3s;
+  }
+  @keyframes look {
+    0%,
+    40%,
+    100% {
+      transform: translateX(0);
+    }
+    55%,
+    75% {
+      transform: translateX(2px);
+    }
+  }
+  .bot.busy .peye {
+    box-shadow: 0 0 7px 1px var(--bh);
+    opacity: 1;
+  }
+  .bot .fin {
+    position: absolute;
+    top: 16px;
+    width: 8px;
+    height: 18px;
+    border-radius: 5px;
+    background: var(--bh);
+    filter: brightness(0.9);
+  }
+  .bot .fin.l {
+    left: -4px;
+  }
+  .bot .fin.r {
+    right: -4px;
+  }
+  .bot .glow {
+    position: absolute;
+    left: 50%;
+    bottom: -9px;
+    width: 44px;
+    height: 10px;
+    transform: translateX(-50%);
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      color-mix(in oklch, var(--bh) 55%, transparent),
+      transparent 70%
+    );
+    filter: blur(1px);
+    opacity: 0.55;
+  }
+
+  /* thinking dots — face the repos (right) */
+  .think {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(9px, -50%);
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 6px 9px;
+    box-shadow: 0 8px 18px -12px rgba(35, 33, 29, 0.6);
+    transition: opacity 0.25s;
+    z-index: 4;
+  }
+  .think i {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    animation: tdot 1.5s ease-in-out infinite;
+  }
+  .think i:nth-child(2) {
+    animation-delay: 0.22s;
+  }
+  .think i:nth-child(3) {
+    animation-delay: 0.44s;
+  }
+  @keyframes tdot {
+    0%,
+    65%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  /* question to Chris — faces left */
+  .qbub {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    width: 172px;
+    transform: translate(-11px, -50%) scale(0.95);
+    transform-origin: 100% 50%;
+    background: #fff;
+    border: 1.5px solid var(--bh);
+    border-radius: 14px;
+    padding: 9px 12px;
+    font-size: 13px;
+    line-height: 1.38;
+    color: var(--ink);
+    text-align: right;
+    box-shadow: 0 2px 4px rgba(35, 33, 29, 0.04), 0 18px 34px -20px rgba(35, 33, 29, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 6;
+  }
+  .qbub::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    transform: translateY(-50%) rotate(45deg);
+    background: #fff;
+    border-right: 1.5px solid var(--bh);
+    border-top: 1.5px solid var(--bh);
+  }
+  .bot.asking .qbub {
+    opacity: 1;
+    transform: translate(-11px, -50%) scale(1);
+  }
+
+  /* ── REPOS (right) ── */
+  .repos {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 13px;
+    z-index: 2;
+  }
+  .repos .kick {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1px;
+  }
+  .repo {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 13px 15px;
+    box-shadow: 0 1px 2px rgba(35, 33, 29, 0.03), 0 14px 30px -24px rgba(35, 33, 29, 0.4);
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  }
+  .repo.active {
+    border-color: var(--rc);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--rc) 22%, transparent),
+      0 16px 30px -22px rgba(35, 33, 29, 0.45);
+    transform: translateX(-2px);
+  }
+  .repo .rtop {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .repo .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--rc);
+    flex: none;
+  }
+  .repo .rname {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .repo .rmeta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    margin-top: 5px;
+    display: flex;
+    gap: 8px;
+  }
+  .repo .ract {
+    margin-top: 9px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+    min-height: 16px;
+  }
+  .repo .rmode {
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+    transition: color 0.2s;
+  }
+  .repo.active .rmode {
+    color: var(--rc);
+  }
+  .repo .rfile {
+    color: var(--ink-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .repo.active .rfile {
+    color: var(--ink-soft);
+  }
+
+  /* ── CONTENT (decoupled) ── */
+  .content {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 26px 40px;
+    align-items: start;
+  }
+  .side .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  .cmds {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cmd {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 10px;
+    margin-left: -10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .cmd:hover {
+    color: var(--ink);
+    background: color-mix(in oklch, var(--bh) 10%, transparent);
+  }
+  .cmd .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bh);
+    flex: none;
+    opacity: 0.55;
+    transition: opacity 0.2s;
+  }
+  .cmd:hover .dot {
+    opacity: 1;
+  }
+  .cmd .ar {
+    margin-left: auto;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+    opacity: 0;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .cmd:hover .ar {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+  .cmd.on {
+    color: var(--ink);
+    background: none;
+  }
+  .cmd.on .dot {
+    opacity: 1;
+  }
+  .cmd.on .ar {
+    opacity: 1;
+    color: var(--bh);
+  }
+
+  .panel {
+    width: 100%;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .panel.exit {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.22s, transform 0.22s;
+  }
+  .phead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 0 14px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .phead .pd {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bh);
+  }
+  .pbody {
+    padding: 4px 0 0;
+  }
+  .pbody > * {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .pbody > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .pbody > *:nth-child(2) {
+    animation-delay: 0.13s;
+  }
+  .pbody > *:nth-child(3) {
+    animation-delay: 0.21s;
+  }
+  .pbody > *:nth-child(4) {
+    animation-delay: 0.29s;
+  }
+  .pbody > *:nth-child(5) {
+    animation-delay: 0.37s;
+  }
+  @keyframes rise {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .pbody h2 {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 0 0 6px;
+  }
+  .pbody .lede {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0 0 4px;
+  }
+  .jrow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3px 18px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .jrow:first-of-type {
+    border-top: none;
+  }
+  .jrow .h {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .jrow .h .r {
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .jrow .y {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  .jrow .d {
+    grid-column: 1 / -1;
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  .plist a {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  .plist a:first-child {
+    border-top: none;
+  }
+  .plist a:hover {
+    color: #2e405c;
+  }
+  .plist a .t {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .plist a .y {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .central {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .central .ic {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    overflow: hidden;
+    flex: none;
+    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.5);
+  }
+  .central .go {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    border: 1px solid var(--slate);
+    color: var(--slate);
+    border-radius: 999px;
+    padding: 8px 14px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .central .go:hover {
+    background: var(--slate);
+    color: #fff;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 4px;
+  }
+  .links a {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 10px 15px;
+    color: var(--ink);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .links a:hover {
+    border-color: var(--slate);
+    transform: translateY(-2px);
+  }
+  .contact-lede {
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 900px) {
+    .scene {
+      grid-template-columns: 1fr;
+      gap: 26px;
+      align-items: start;
+      min-height: 0;
+      padding-top: 8px;
+    }
+    .wires {
+      display: none;
+    }
+    .cast {
+      align-items: center;
+    }
+    .swarm {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 44px 40px;
+      padding: 18px 0;
+    }
+    .qbub {
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: 100%;
+      transform: translate(-50%, -9px) scale(0.95);
+      text-align: center;
+    }
+    .qbub::after {
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: -8px;
+      transform: translateX(-50%) rotate(45deg);
+      border: 0;
+      border-right: 1.5px solid var(--bh);
+      border-bottom: 1.5px solid var(--bh);
+    }
+    .bot.asking .qbub {
+      transform: translate(-50%, -9px) scale(1);
+    }
+    .content {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .top,
+    .stage {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+</style>
+
+<script>
+  const CENTRAL_ICO = (() => {
+    const RB = ['#2F9E94', '#D49A28', '#E0523B', '#6E5AA8'];
+    const stops = RB.map(
+      (c, i) => `<stop offset="${((i / 3) * 100).toFixed(0)}%" stop-color="${c}"/>`
+    ).join('');
+    return `<svg viewBox="0 0 100 100" width="100%" height="100%" style="display:block" fill="none">
+      <defs><linearGradient id="cbg" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#5A6B85"/><stop offset="1" stop-color="#262E3D"/></linearGradient>
+      <linearGradient id="crb" x1="0" y1="0.1" x2="1" y2="0.9">${stops}</linearGradient></defs>
+      <rect width="100" height="100" fill="url(#cbg)"/>
+      <text x="50" y="53" text-anchor="middle" dominant-baseline="central" font-family="'Figtree',sans-serif" font-weight="700" font-size="76" fill="none" stroke="url(#crb)" stroke-width="6.5" paint-order="stroke" stroke-linejoin="round" stroke-linecap="round">C</text></svg>`;
+  })();
+
+  /* Content sections — driven by the pills, NOT the robots */
+  const SECTIONS = [
+    {
+      key: 'work',
+      hue: '#2F9E94',
+      label: "Where I've worked",
+      panel: `<h2>Work</h2>
+        <div class="jrow"><div class="h">Block <span class="r">· Senior Software Engineer</span></div><div class="y">2016–2024</div>
+          <div class="d">Payments infrastructure and developer tooling at scale — services running millions of transactions a day, and the quiet platform work that made everyone else faster.</div></div>
+        <div class="jrow"><div class="h">Central <span class="r">· Founder &amp; sole engineer</span></div><div class="y">2024–now</div>
+          <div class="d">Designed and built a calm, tech-forward app end to end, for iOS and Mac.</div></div>`,
+    },
+    {
+      key: 'central',
+      hue: '#D49A28',
+      label: 'Side projects',
+      panel: `<div class="central"><div class="ic">${CENTRAL_ICO}</div><div>
+        <h2 style="margin-bottom:2px">Central</h2>
+        <p class="lede">My one and only side project — a friendly home for your todos and pursuits: recipes to try, books to read, movies to watch, people to keep up with. Tech-forward, but warm. Designed and built end to end.</p>
+        <a class="go" href="#" target="_blank" rel="noopener">Visit central.app ↗</a>
+      </div></div>`,
+    },
+    {
+      key: 'writing',
+      hue: '#E0523B',
+      label: 'My writing',
+      panel: `<h2>Writing</h2>
+        <div class="plist">
+          <a href="#" target="_blank" rel="noopener"><span class="t">The loading state is the product</span><span class="y">2026</span></a>
+          <a href="#" target="_blank" rel="noopener"><span class="t">Eight years on one payments platform, and what stuck</span><span class="y">2026</span></a>
+          <a href="#" target="_blank" rel="noopener"><span class="t">Designing Central's icon</span><span class="y">2026</span></a>
+          <a href="#" target="_blank" rel="noopener"><span class="t">Boring technology is a competitive advantage</span><span class="y">2025</span></a>
+        </div>`,
+    },
+    {
+      key: 'contact',
+      hue: '#6E5AA8',
+      label: 'Get in touch',
+      panel: `<h2>Say hello</h2>
+        <p class="contact-lede">Looking for a careful engineer, or just have a good problem to chew on? My inbox is open.</p>
+        <div class="links">
+          <a href="mailto:chris@chrisparcel.com">chris@chrisparcel.com</a>
+          <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="#" target="_blank" rel="noopener">Bluesky ↗</a>
+          <a href="#" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="#" target="_blank" rel="noopener">Résumé ↓</a>
+        </div>`,
+    },
+  ];
+
+  /* Ambient robots — middle column, stacked */
+  const BOTS = [{ hue: '#2F9E94' }, { hue: '#D49A28' }, { hue: '#E0523B' }, { hue: '#6E5AA8' }];
+
+  /* Repos — right column */
+  const REPOS = [
+    { id: 'ios', name: 'central-ios', branch: 'main', lang: 'Swift', hue: '#E0523B', files: ['SyncEngine.swift', 'TodayView.swift', 'Store.swift', 'Keychain.swift'] },
+    { id: 'core', name: 'central-core', branch: 'main', lang: 'TypeScript', hue: '#3178C6', files: ['sync.ts', 'schema.ts', 'api.ts', 'queue.ts'] },
+    { id: 'android', name: 'central-android', branch: 'develop', lang: 'Kotlin', hue: '#6E5AA8', files: ['SyncWorker.kt', 'HomeScreen.kt', 'Repo.kt', 'Db.kt'] },
+  ];
+
+  /* Technical Q&A — a bot asks, Chris answers */
+  const QA = [
+    { q: 'Optimistic sync or last-write-wins?', a: 'Optimistic, with a clear undo.' },
+    { q: 'Diff the schema before migrating?', a: 'Always. Migrations are one-way doors.' },
+    { q: 'Is this coroutine leaking?', a: 'Scope it to the lifecycle and watch.' },
+    { q: 'Retry with backoff, or fail fast?', a: 'Backoff — then surface it honestly.' },
+    { q: 'Memoize this selector?', a: 'Only if the profiler asks you to.' },
+    { q: 'Wrap these writes in a transaction?', a: 'Yes. Half-written state is a bug.' },
+    { q: 'How long should I debounce writes?', a: '300ms. Feels instant, saves the disk.' },
+    { q: 'Cache invalidation — TTL or events?', a: 'Events. TTLs lie eventually.' },
+    { q: 'How should the offline queue behave?', a: 'Idempotent, ordered, forgiving.' },
+    { q: 'Main-thread work sneaking in here?', a: 'Move it off. Never block a tap.' },
+    { q: 'Should this API be paginated?', a: 'If it can grow unbounded, yes.' },
+    { q: 'Force-unwrap or guard let?', a: 'Guard. Crash on purpose, not by accident.' },
+  ];
+
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const chris = document.getElementById('chris');
+  const bubble = document.getElementById('bubble');
+  const swarm = document.getElementById('swarm');
+  const reposEl = document.getElementById('repos');
+  const cmds = document.getElementById('cmds');
+  const panel = document.getElementById('panel');
+  const scene = document.querySelector('.scene');
+  const wires = document.getElementById('wires');
+
+  /* build robots */
+  const botEls = BOTS.map((b, i) => {
+    const el = document.createElement('div');
+    el.className = 'bot';
+    el.style.setProperty('--bh', b.hue);
+    el.style.animationDelay = i * 0.5 + 's';
+    el.innerHTML = `
+      <div class="qbub"></div>
+      <div class="think"><i></i><i></i><i></i></div>
+      <span class="ant"></span>
+      <span class="fin l"></span><span class="fin r"></span>
+      <div class="rbody"><div class="face"><span class="peye"></span><span class="peye"></span></div></div>
+      <div class="glow"></div>`;
+    el.querySelectorAll('.peye').forEach((e) => (e.style.animationDelay = i * 0.7 + 's'));
+    swarm.appendChild(el);
+    return el;
+  });
+
+  /* build repos */
+  const repoEls = REPOS.map((r) => {
+    const el = document.createElement('div');
+    el.className = 'repo';
+    el.style.setProperty('--rc', r.hue);
+    el.innerHTML = `
+      <div class="rtop"><span class="dot"></span><span class="rname">${r.name}</span></div>
+      <div class="rmeta"><span>${r.lang}</span><span>· ${r.branch}</span></div>
+      <div class="ract"><span class="rmode">idle</span><span class="rfile"></span></div>`;
+    reposEl.appendChild(el);
+    return el;
+  });
+
+  /* build command pills */
+  let current = null;
+  SECTIONS.forEach((s) => {
+    const c = document.createElement('button');
+    c.className = 'cmd';
+    c.dataset.key = s.key;
+    c.style.setProperty('--bh', s.hue);
+    c.innerHTML = `<span class="dot"></span>${s.label}<span class="ar">→</span>`;
+    c.addEventListener('click', () => dispatch(s.key));
+    cmds.appendChild(c);
+  });
+  function dispatch(key) {
+    if (key === current) return;
+    const s = SECTIONS.find((x) => x.key === key);
+    [...cmds.children].forEach((c) => c.classList.toggle('on', c.dataset.key === key));
+    const render = () => {
+      panel.style.setProperty('--bh', s.hue);
+      panel.innerHTML = `<div class="phead"><span class="pd"></span>${s.label}</div><div class="pbody">${s.panel}</div>`;
+      panel.classList.remove('exit');
+    };
+    if (current) {
+      panel.classList.add('exit');
+      setTimeout(render, 240);
+    } else render();
+    current = key;
+  }
+
+  /* Chris talking */
+  let talkTimer = 0,
+    clearTimer = 0;
+  function say(html, hold) {
+    clearTimeout(clearTimer);
+    bubble.innerHTML = html;
+    bubble.classList.add('show');
+    if (!reduce) {
+      chris.classList.add('talk');
+      clearTimeout(talkTimer);
+      talkTimer = setTimeout(() => chris.classList.remove('talk'), 1500);
+    }
+    if (hold) clearTimer = setTimeout(() => bubble.classList.remove('show'), hold);
+  }
+
+  /* blink loop */
+  if (!reduce) {
+    (function blink() {
+      const wait = 2600 + Math.random() * 3200;
+      setTimeout(() => {
+        chris.classList.add('blink');
+        setTimeout(() => chris.classList.remove('blink'), 120);
+        blink();
+      }, wait);
+    })();
+  }
+
+  /* ── connection wires: bot → repo, read/write ── */
+  function anchor(el, side) {
+    const s = scene.getBoundingClientRect(),
+      r = el.getBoundingClientRect();
+    return { x: (side === 'right' ? r.right : r.left) - s.left, y: r.top - s.top + r.height / 2 };
+  }
+  function connect(botEl, repoEl, mode, file, hue) {
+    const from = anchor(botEl, 'right'),
+      to = anchor(repoEl, 'left');
+    const cx = (to.x - from.x) * 0.55;
+    const d = `M${from.x.toFixed(1)},${from.y.toFixed(1)} C ${(from.x + cx).toFixed(1)},${from.y.toFixed(1)} ${(to.x - cx).toFixed(1)},${to.y.toFixed(1)} ${to.x.toFixed(1)},${to.y.toFixed(1)}`;
+    const g = document.createElementNS(SVGNS, 'g');
+
+    const path = document.createElementNS(SVGNS, 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('class', 'wire ' + mode);
+    path.setAttribute('stroke', hue);
+    path.setAttribute('stroke-width', '1.5');
+    path.setAttribute('stroke-dasharray', '1 7');
+    g.appendChild(path);
+
+    const dot = document.createElementNS(SVGNS, 'circle');
+    dot.setAttribute('r', '3.1');
+    dot.setAttribute('fill', hue);
+    dot.setAttribute('class', 'wpulse');
+    if (!reduce) {
+      const mo = document.createElementNS(SVGNS, 'animateMotion');
+      mo.setAttribute('dur', '0.85s');
+      mo.setAttribute('repeatCount', 'indefinite');
+      mo.setAttribute('path', d);
+      mo.setAttribute('calcMode', 'linear');
+      mo.setAttribute('keyPoints', mode === 'read' ? '1;0' : '0;1');
+      mo.setAttribute('keyTimes', '0;1');
+      dot.appendChild(mo);
+    } else {
+      dot.setAttribute('cx', to.x);
+      dot.setAttribute('cy', to.y);
+    }
+    g.appendChild(dot);
+
+    const label = document.createElementNS(SVGNS, 'text');
+    label.setAttribute('x', ((from.x + to.x) / 2).toFixed(1));
+    label.setAttribute('y', ((from.y + to.y) / 2 - 7).toFixed(1));
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('class', 'wlabel');
+    label.setAttribute('fill', hue);
+    label.textContent = mode.toUpperCase();
+    g.appendChild(label);
+
+    wires.appendChild(g);
+    requestAnimationFrame(() => {
+      path.classList.add('on');
+      dot.classList.add('on');
+      label.classList.add('on');
+    });
+
+    // light up bot + repo
+    botEl.classList.add('busy');
+    repoEl.classList.add('active');
+    repoEl.querySelector('.rmode').textContent = mode.toUpperCase();
+    repoEl.querySelector('.rfile').textContent = file;
+
+    const life = 1600 + Math.random() * 900;
+    setTimeout(() => {
+      path.classList.remove('on');
+      dot.classList.remove('on');
+      label.classList.remove('on');
+    }, life);
+    setTimeout(() => {
+      botEl.classList.remove('busy');
+      repoEl.classList.remove('active');
+      repoEl.querySelector('.rmode').textContent = 'idle';
+      repoEl.querySelector('.rfile').textContent = '';
+      g.remove();
+    }, life + 450);
+  }
+
+  const MODES = ['read', 'read', 'write', 'write', 'read'];
+  let lastBotR = -1;
+  function repoLoop() {
+    const gap = 1400 + Math.random() * 1600;
+    setTimeout(() => {
+      let bi;
+      do {
+        bi = Math.floor(Math.random() * botEls.length);
+      } while (bi === lastBotR);
+      lastBotR = bi;
+      const ri = Math.floor(Math.random() * repoEls.length);
+      const repo = REPOS[ri];
+      const mode = MODES[Math.floor(Math.random() * MODES.length)];
+      const file = repo.files[Math.floor(Math.random() * repo.files.length)];
+      connect(botEls[bi], repoEls[ri], mode, file, repo.hue);
+      repoLoop();
+    }, gap);
+  }
+
+  /* Q&A loop — a bot asks Chris a technical question */
+  let lastBotQ = -1,
+    lastQ = -1;
+  function askLoop() {
+    const gap = 4600 + Math.random() * 3000;
+    setTimeout(() => {
+      let bi;
+      do {
+        bi = Math.floor(Math.random() * botEls.length);
+      } while (bi === lastBotQ);
+      lastBotQ = bi;
+      let qi;
+      do {
+        qi = Math.floor(Math.random() * QA.length);
+      } while (qi === lastQ);
+      lastQ = qi;
+      const bot = botEls[bi],
+        qa = QA[qi];
+      bot.querySelector('.qbub').textContent = qa.q;
+      bot.classList.add('asking');
+      setTimeout(() => say('<b>' + qa.a + '</b>', 3600), 1200);
+      setTimeout(() => bot.classList.remove('asking'), 4400);
+      askLoop();
+    }, gap);
+  }
+
+  /* intro, then start */
+  dispatch('work');
+  setTimeout(
+    () =>
+      say(
+        "Hi — I'm <b>Chris</b>. These four read and write my repos, and ask when they're unsure.",
+        4600
+      ),
+    400
+  );
+  setTimeout(repoLoop, 1600);
+  setTimeout(askLoop, 5600);
+</script>
