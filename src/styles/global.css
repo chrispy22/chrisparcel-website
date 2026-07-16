@@ -29,6 +29,12 @@ body {
   min-height: 100%;
 }
 
+/* Turn off the overscroll bounce so the rubber-band area can't reveal a
+   mismatched color behind the page. */
+html {
+  overscroll-behavior: none;
+}
+
 body {
   background: var(--canvas);
   color: var(--ink);
