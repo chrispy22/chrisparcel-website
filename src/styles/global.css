@@ -1,26 +1,22 @@
 /* Foundation tokens + base for chrisparcel.com.
-   The warm "Chris Parcel" personal-site theme. Page-specific component
-   styles live alongside their markup (see src/pages/index.astro). */
+   The "Chris Parcel" v3 theme — quiet, grainy paper, Onest.
+   Page-specific component styles live alongside their markup
+   (see src/pages/index.astro). */
 :root {
-  --canvas: #f4f2ec;
-  --canvas-2: #ece9e0;
+  --canvas: #f3f2ee;
+  --canvas-2: #eae9e4;
   --ink: #23211d;
   --ink-soft: #615d56;
   --ink-faint: #9a958c;
   --slate: #3e5575;
-  --skin: #ecc7a6;
-  --skin-sh: #d9ae88;
-  --hair: #6e4e34;
-  --hair-2: #5a3d28;
-  --stubble: #b98f6e;
-  --shirt: #43689f;
   --teal: #2f9e94;
   --gold: #d49a28;
   --coral: #e0523b;
   --violet: #6e5aa8;
-  --rule: #e1ded6;
-  --sans: 'Figtree', system-ui, -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --rule: #dbdbd4;
+  --sans: 'Onest', system-ui, -apple-system, sans-serif;
+  --display: 'Onest', system-ui, -apple-system, sans-serif;
+  --mono: 'Space Mono', ui-monospace, monospace;
 }
 
 * {
@@ -38,7 +34,12 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(120% 90% at 50% -10%, #faf9f4 0%, var(--canvas) 55%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"),
+    radial-gradient(120% 95% at 50% -12%, #fdfdfc 0%, var(--canvas) 62%);
+  background-blend-mode: overlay, normal;
+  background-size: 120px 120px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-attachment: fixed, scroll;
   overflow-x: hidden;
   min-height: 100vh;
   display: flex;
