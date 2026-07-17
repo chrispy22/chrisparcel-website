@@ -256,6 +256,15 @@ import Layout from '../layouts/Layout.astro';
     font-style: italic;
     color: var(--ink);
   }
+  .article h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin: 28px 0 12px;
+  }
 
   .pbody h2,
   .secbody h2 {
@@ -509,8 +518,20 @@ import Layout from '../layouts/Layout.astro';
         },
         {
           title: "Central's CRDT sync system",
-          year: 'Draft',
-          body: `<p>How Central syncs: a CRDT-based system that lets every device edit offline and merge without conflicts. To cover the data model, how merges resolve, and the tradeoffs made along the way.</p>`,
+          year: 'July 17, 2026',
+          body: `<p>I built Central's sync from scratch. It has to work offline, stay end-to-end encrypted, and let every device edit freely and still converge to the same state. The server only ever holds encrypted operations, so the clients do the merging. The useful thing I learned building it was not a clever data structure. It was how little cleverness the problem actually needed.</p>
+            <h3>The merge</h3>
+            <p>Under the hood it is about as simple as sync gets: field-level last-writer-wins. Every change is a tiny operation with a timestamp. Edit the same field on two devices and the later timestamp wins; edit different fields and both survive. For structured data (to-dos, lists, dates, and tags), that is almost always the behavior you want. You do not merge two due dates. You take the newer one. Richer CRDTs, like Automerge, earn their complexity when two people edit inside the same value at once, typing into the same sentence of a shared document, where picking one writer would throw away the other's words. Central's data almost never works that way, so all that machinery would mostly sit idle.</p>
+            <h3>Two clocks</h3>
+            <p>The part that took me longest to see is that a sync system has two jobs that feel like one, and each needs its own clock. One job is settling conflicts: when two devices change the same field, which wins? Every operation carries a hybrid logical clock for that: mostly the device's wall clock, so the later edit usually wins, but with a counter to break exact ties and a rule that the clock only ever moves forward, never back. Any two edits then fall into one definite order that every device agrees on, even when their clocks are off. The other job is making sure a device has seen everything: the server stamps each operation as it arrives with a plain counter (one, two, three), so a device that has processed up to 4,812 just asks for everything after. Try to use one clock for both and it quietly breaks: fetch new work by wall-clock time and an edit made offline last week arrives looking older than what you have and never gets picked up. Two jobs, two clocks.</p>
+            <h3>Out-of-order edits</h3>
+            <p>There is one more wrinkle: an edit can arrive before the to-do it changes, since operations are numbered by when they reach the server rather than by what depends on what, and a batched import can deliver the two in either order. When that happens, the edit does not wait. It creates the to-do itself, right then, as a bare record carrying the one field it sets and nothing else. This is the very to-do the create will describe, sharing its id, just incomplete for the moment. When the create finally lands, it does not overwrite anything; it fills in the still-empty fields and leaves the edited one alone, since that field already holds the newer write. The record is correct the whole time. It only goes from partial to complete, and which of the two arrived first never mattered.</p>
+            <h3>History and snapshots</h3>
+            <p>On the server, I keep every operation a device has ever made, and that buys two things. Replay the log up to any point and you have the exact state from last Tuesday, or the moment before a bad import: full history, for free. And because the whole log lives there, no single device has to carry it. Once a device has folded everything up to a point into a snapshot, it can drop the operations behind that point and stay light, without ever losing the past, since the history is always available to pull back down.</p>
+            <h3>Old and new clients</h3>
+            <p>Devices update on their own schedules, so a brand-new client and a months-old one are often writing to the same workspace at once. Every operation is a typed protobuf message, which is what makes that safe: when an older client meets a field it does not recognize, it neither chokes nor silently drops it. It keeps the unknown bytes as they are, applies whatever it does understand, and forwards the rest untouched, so a newer client downstream still reads it in full. There is no coordinated migration and no taking the fleet offline to change the schema. Old and new clients simply coexist, and anything one of them cannot yet interpret rides along intact until it reaches one that can.</p>
+            <h3>In conclusion</h3>
+            <p>That is the whole system. While I can't say I'm itching to work on more multi-client sync machinery in the future, Central had a genuine need to work offline, stay encrypted, and agree across three platforms. Fitting a simple system to those constraints was satisfying, and I'm happy with how it turned out.</p>`,
         },
         {
           title: 'A zero-knowledge account system',
