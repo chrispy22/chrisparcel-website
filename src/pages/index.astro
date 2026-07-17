@@ -274,9 +274,44 @@ import Layout from '../layouts/Layout.astro';
   .secbody .lede:last-child {
     margin-bottom: 0;
   }
+  .secbody b,
+  .secbody strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .secbody em {
+    font-style: italic;
+    color: var(--ink);
+  }
+  /* feature bullet list (Central) */
+  .flist {
+    list-style: none;
+    margin: 4px 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .flist li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 16.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .flist li::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--bh);
+  }
   .jrow {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 62px;
     gap: 3px 18px;
     align-items: baseline;
     padding: 16px 0;
@@ -298,7 +333,7 @@ import Layout from '../layouts/Layout.astro';
   .jrow .roles {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 62px;
     gap: 3px 18px;
     align-items: baseline;
     font-size: 18px;
@@ -320,9 +355,10 @@ import Layout from '../layouts/Layout.astro';
     letter-spacing: 0;
     color: var(--ink-faint);
     white-space: nowrap;
+    justify-self: end;
   }
   .jrow .d {
-    grid-column: 1 / -1;
+    grid-column: 1;
     font-size: 15px;
     color: var(--ink-soft);
     line-height: 1.5;
@@ -420,12 +456,17 @@ import Layout from '../layouts/Layout.astro';
       noHead: true,
       panel: `<div class="jrow"><div class="h">Staff Software Engineer <span class="r">· Block (Square)</span></div><div class="y">2021–2026</div>
           <div class="roles"><span>Senior Engineer</span><span class="y">2018–2021</span></div>
-          <div class="d">Tech lead on the shared Cart Platform across every POS, and on a two-year Retail checkout overhaul — data models to UI, serving millions of daily users.</div></div>
+          <div class="d">iOS Tech Lead for the Cart Platform team.</div></div>
         <div class="jrow"><div class="h">Senior iOS Developer <span class="r">· Verst</span></div><div class="y">2016–2017</div>
-          <div class="d">Owned a mobile blogging tool from zero to launch and drove Swift adoption.</div></div>
+          <div class="d">One of two iOS developers who built a new mobile blogging tool.</div></div>
+        <div class="jrow"><div class="h">iOS Consultant <span class="r">· Freelance</span></div><div class="y">2015–2016</div>
+          <div class="d">Freelanced and pursued side projects while traveling around the world.</div></div>
+        <div class="jrow"><div class="h">Lead iOS Developer <span class="r">· Keep.com</span></div><div class="y">2013–2015</div>
+          <div class="d">Led a three-person team of mobile developers building a universal shopping cart app.</div></div>
         <div class="jrow"><div class="h">Co-Founder <span class="r">· Collectively Assembled</span></div><div class="y">2012–2013</div>
           <div class="d">Co-founded a fashion startup, raised $500k, shipped two apps in a year — one featured in the App Store.</div></div>
         <div class="jrow"><div class="h">B.A. Economics <span class="r">· UCLA</span></div><div class="y">2011</div>
+          <div class="roles"><span>Minor in Human Complex Systems</span></div>
           <div class="d">McKelvey entrepreneurship scholar. Built a flashcard app featured in the App Store, sold it after graduation.</div></div>`,
     },
     {
@@ -435,9 +476,17 @@ import Layout from '../layouts/Layout.astro';
       noHead: true,
       panel: `<h2 style="margin-bottom:6px">Central</h2>
         <div class="asub">Coming soon</div>
-        <p class="lede">My one and only side project — a friendly home for your todos and pursuits: recipes to try, books to read, movies to watch, people to keep up with. Tech-forward, but warm. Designed and built end to end.</p>
-        <p class="lede">It started as a place to park the things I kept losing track of — a book a friend mentioned, a restaurant worth remembering, a thought I wanted to come back to. Every capture tool I tried was either a rigid database or a blank void, so I built something in between: structured enough to be useful, loose enough that adding a thing never feels like a chore.</p>
-        <p class="lede">Under the hood, AI quietly enriches and classifies each entry as it comes in, and a separate chat can reference and act on everything you've saved. The whole thing runs on the same agentic development system I use for my other work — Swift on the client, a small typed backend, and a deliberately boring data model I can trust. It's the project I use to keep my own craft sharp.</p>
+        <p class="lede">Over the years I've shipped a handful of side projects: a photo-sharing app, a habit tracker, a travel-recs app. They were fun to build, but I realized that <em>having more apps on my phone wasn't making my life better</em>, so I started building one that would help consolidate and connect my varied interests in one simple experience.</p>
+        <p class="lede"><b>Central</b> is a single, calm home for everything you want to remember: notes, to-dos, movie lists, recipes, birthdays, and much more.</p>
+        <ul class="flist">
+          <li><b>Offline-first.</b> Your data is always there, instantly.</li>
+          <li><b>Real-time sync.</b> Everything stays current across all your devices.</li>
+          <li><b>Zero-knowledge accounts.</b> Only you can read what you store.</li>
+          <li><b>Easy sharing.</b> Collaborate on lists and pass recs to friends.</li>
+          <li><b>Deep AI integration.</b> Capture and organization become effortless.</li>
+          <li><b>AI chat.</b> Ask, build, and reference everything you've saved.</li>
+        </ul>
+        <p class="lede">I can't wait to launch it, and I hope you love using it.</p>
         <div class="demos">
           <div class="demo ios"><img class="demo-img" src="/sponge-ios-poster.png" alt="Sponge — the Central iOS app" loading="lazy" width="1120" height="2220" /></div>
         </div>`,
@@ -449,24 +498,67 @@ import Layout from '../layouts/Layout.astro';
       noHead: true,
       articles: [
         {
-          title: 'The loading state is the product',
-          year: '2026',
-          body: `<p>We treat loading states as the gap between the real screens — a spinner to apologize for the wait. But for anyone on a slow connection, the loading state <em>is</em> the product. It's the first thing they see and, on a bad day, the only thing.</p><p>The fix isn't a fancier spinner. It's designing the empty and pending states with the same care as the happy path: skeletons that match the real layout, optimistic writes that make a tap feel instant, and copy that tells the truth about what's happening.</p><p>Do it well and the wait disappears. Do it badly and no amount of polish downstream will save you.</p>`,
+          title: 'Building Central',
+          year: 'Draft',
+          body: `<p>A short overview of Central: the itch that started it, the principles behind it (offline-first, private by default, and AI only where it earns its place), and where it's headed. Keep this one brief, the elevator version of the Side projects entry.</p>`,
         },
         {
-          title: 'Eight years on one payments platform',
-          year: '2026',
-          body: `<p>I spent eight years on essentially one system. That's unfashionable advice in an industry that rewards job-hopping, but staying taught me things you can only learn on a long timeline.</p><p>You watch your own decisions age. The clever abstraction that felt elegant in year two becomes the thing you curse in year five. You learn which shortcuts compound and which quietly disappear. Mostly you learn humility about what “done” means.</p><p>The platform work that mattered most was never glamorous. It was the boring reliability, the migration nobody noticed, the API that just kept working.</p><p>When I joined, the checkout path was a single monolithic method that had grown for years — a function so long that scrolling through it felt like reading a novel with no chapters. Nobody had written it maliciously. Every line had been added by a reasonable person solving a reasonable problem on a reasonable deadline. That's the thing about legacy code: it's just decisions, stacked.</p><p>The first year I mostly read. I traced money through the system until I could close my eyes and see it move. I learned where the bodies were buried — the tax edge cases, the currency rounding that had to happen in exactly one place, the retry logic that would double-charge a customer if you looked at it wrong. You cannot refactor what you do not understand, and understanding a payments system takes longer than anyone wants it to.</p><p>The second year I started to change things, carefully. The rule I gave myself was simple: never a rewrite, always a strangler. Wrap the old path, route a sliver of traffic through the new one, compare the outputs byte for byte, and only widen the pipe when the numbers matched for a week straight. It was slow. It was also the only approach that let me sleep.</p><p>By year four we had replaced the monolith without a single customer noticing. That is the strange, invisible reward of platform work: the highest compliment is silence. No incident channel, no angry merchant, no VP asking what happened to the numbers. Just money moving, quietly, the way it is supposed to.</p><p>Years five through eight were about leverage. Once the foundation was trustworthy, features that used to take a quarter took a week. New engineers could ship on their first day because the sharp edges were gone. I spent less time writing code and more time in documents and diagrams, trying to give twenty people the same mental model I had spent four years building. That translation — from what is in your head to what is in the team's head — turns out to be most of what senior engineering actually is.</p><p>What surprised me most was how much of the value compounded. A good abstraction does not just save you the afternoon you wrote it; it saves every afternoon after, for everyone. A flaky test you finally fix stops stealing an hour a week from the whole team, forever. Reliability is a savings account, and staying long enough to watch the interest accrue changed how I think about the work.</p><p>People ask if I regret not moving around more, chasing titles and comp. Honestly, no. There is a particular satisfaction in living with your own decisions long enough to be humbled by them, to fix them, and to watch the fixed version hold. You do not get that from a two-year stint. You get it from staying past the point where it is exciting, into the point where it is yours.</p><p>The platform outlasted my time on it, which was always the goal. The best thing you can build is something that no longer needs you — and the only way to know you have built it is to still be there when someone else ships on top of it without ever knowing your name.</p>`,
+          title: 'Prompt engineering',
+          year: 'Draft',
+          body: `<p>Notes on prompt engineering in practice: treating prompts like an admin surface, leaning on automated discovery instead of hand-holding, and the patterns that have actually held up. To flesh out with concrete before-and-after examples.</p>`,
         },
         {
-          title: "Designing Central's icon",
-          year: '2026',
-          body: `<p>Central needed an icon that felt warm and technical at once — a home for your thoughts that didn't look like a productivity tool shouting at you.</p><p>I went through dozens of directions before landing on a single letterform stroked in a soft rainbow gradient over a deep slate ground. The gradient nods to the range of things you keep in Central; the slate keeps it grounded and calm.</p><p>The lesson, again: subtraction. The final mark is the simplest one I drew.</p>`,
+          title: "Central's CRDT sync system",
+          year: 'Draft',
+          body: `<p>How Central syncs: a CRDT-based system that lets every device edit offline and merge without conflicts. To cover the data model, how merges resolve, and the tradeoffs made along the way.</p>`,
         },
         {
-          title: 'Boring technology is a competitive advantage',
-          year: '2025',
-          body: `<p>Every team has a budget for novelty, and it's smaller than you think. Spend it on the one or two things that are genuinely core to what you're building, and be aggressively boring about everything else.</p><p>Boring technology has a property new technology can't offer: you already know how it fails. That knowledge is worth more than any feature list when it's 2am and production is down.</p><p>The goal was never to use the most interesting tools. It was to ship something people can rely on.</p>`,
+          title: 'A zero-knowledge account system',
+          year: 'Draft',
+          body: `<p>How Central keeps data private: a zero-knowledge model where only the user can decrypt what they store. To cover key handling, account recovery, and exactly what the server can and cannot see.</p>`,
+        },
+        {
+          title: 'AI skills and my development stack',
+          year: 'Draft',
+          body: `<p>A tour of the AI-assisted development stack I use day to day: the orchestrator, handoff protocols, code-health scanners, Linear, and how the pieces fit together. Aiming for a few minutes' read, not a manual.</p>`,
+        },
+        {
+          title: 'Greenfield and trailing hardening',
+          year: 'Draft',
+          body: `<p>On building new projects fast: you don't stand up a design system first, and you don't harden every PR as you go. Coordinating magic values, extracting strings, and the consistency passes come later, as a deliberate trailing sweep once the shape has settled. To make the case for what belongs up front and what is better left to trail.</p>`,
+        },
+        {
+          title: 'Using agents in production',
+          year: 'Draft',
+          body: `<p>Where AI agents actually earn their keep in production, and how to run them safely: guardrails, review gates, and the failure modes worth planning for. The through-line is that useful and safe are not at odds if you design for both.</p>`,
+        },
+        {
+          title: 'Generative UI',
+          year: 'Draft',
+          body: `<p>A thought piece on generative UI, and projects like Monogram and Open UI. I think it's genuinely cool, but I'm not sure how much it changes things while people still rely on learned muscle memory. To argue both sides and land somewhere honest.</p>`,
+        },
+        {
+          title: 'Sharing work in the age of AI',
+          year: 'Draft',
+          body: `<p>On collaboration when AI handles the easy parts. The paradox I keep hitting: the only work I can cleanly hand off is work I haven't thought about yet, because once I've thought it through, it's already most of the way done. To turn that into a practical model for staying connected.</p>`,
+        },
+        {
+          title: 'Roles in the modern workplace',
+          year: 'Draft',
+          body: `<p>What titles and roles mean now that AI does a real chunk of the work. A few hot takes to react to (I'll pick a lane):</p>
+            <ul class="flist">
+              <li>The lines between engineer, designer, and PM are dissolving; the valuable person is the one who can hold the whole problem.</li>
+              <li>Generalists beat specialists again, because AI collapses the cost of switching context.</li>
+              <li>The most future-proof skill isn't coding or design, it's clearly specifying what "good" looks like.</li>
+              <li>Management becomes more about taste and judgment than coordination, since the coordination is increasingly automated.</li>
+              <li>Headcount stops being the proxy for ambition; small teams ship what used to need departments.</li>
+              <li>The junior on-ramp changes rather than disappears: you're expected to direct AI on day one, not just write code.</li>
+            </ul>`,
+        },
+        {
+          title: 'My time at Block',
+          year: 'Draft',
+          body: `<p>Eight years at one company, from Square to Block, across product and platform, through the February 2026 layoff. What I learned, what I'd do again, and what staying that long teaches you that job-hopping can't. The oldest entry here, and probably the most personal.</p>`,
         },
       ],
     },
